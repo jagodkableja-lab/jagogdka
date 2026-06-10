@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // @ts-ignore
 import profileImg from './assets/images/profile.jpg';
 // @ts-ignore
@@ -13,9 +13,7 @@ import {
   Send, 
   MessageSquare, 
   Globe, 
-  ArrowUpRight,
-  X,
-  ExternalLink
+  ArrowUpRight
 } from 'lucide-react';
 
 export default function App() {
@@ -23,18 +21,6 @@ export default function App() {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
   const [imgError, setImgError] = useState(false);
   const [bgImgError, setBgImgError] = useState(false);
-  const [showIosSafariModal, setShowIosSafariModal] = useState(false);
-  const [isIosInApp, setIsIosInApp] = useState(false);
-  const [pendingUrl, setPendingUrl] = useState('');
-
-  useEffect(() => {
-    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
-    const isInstagram = /Instagram|FBAN|FBAV/i.test(userAgent);
-    const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
-    if (isInstagram && isIOS) {
-      setIsIosInApp(true);
-    }
-  }, []);
 
   const triggerToast = (message: string, type: 'success' | 'info' = 'success') => {
     setToast({ message, type });
@@ -53,20 +39,12 @@ export default function App() {
     const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
     const isInstagram = /Instagram|FBAN|FBAV/i.test(userAgent);
     const isAndroid = /Android/i.test(userAgent);
-    const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
 
     // Break out of Instagram in-app browser on Android
     if (isInstagram && isAndroid) {
       const rawUrl = url.replace(/^https?:\/\//, '');
       const intentUrl = `intent://${rawUrl}#Intent;scheme=https;end;`;
       window.location.href = intentUrl;
-      return;
-    }
-
-    // Force Safari escape modal on iOS Instagram webview
-    if (isInstagram && isIOS) {
-      setPendingUrl(url);
-      setShowIosSafariModal(true);
       return;
     }
 
@@ -91,18 +69,6 @@ export default function App() {
   return (
     <div id="jb-viewport-container" className="min-h-screen w-full relative m-0 p-0 flex flex-col items-center justify-center overflow-x-hidden bg-[#0f070a] text-white font-sans antialiased selection:bg-[#ff4b8b]/30">
       
-      {/* iOS Instagram top breakout guide banner */}
-      {isIosInApp && (
-        <div className="w-full bg-[#ff4b8b] text-white py-2.5 px-4 text-xs font-bold shrink-0 flex items-center justify-center gap-2 z-40 text-center shadow-[0_4px_12px_rgba(255,75,139,0.25)] sticky top-0 backdrop-blur-md bg-opacity-95">
-          <Sparkles size={14} className="text-white shrink-0 animate-pulse" />
-          <span>
-            {lang === 'PL' 
-              ? '👉 Przeglądasz w Instagramie? Kliknij ⋯ w prawym górnym rogu i "Otwórz w Safari"!' 
-              : '👉 Browsing in Instagram? Tap ⋯ in top right and select "Open in Safari"!'}
-          </span>
-        </div>
-      )}
-
       {/* Background image container with smooth luxury blur */}
       <div 
         id="bg-image-backdrop" 
@@ -311,69 +277,6 @@ export default function App() {
             <Sparkles size={10} className="text-white" />
           </div>
           <span>{toast.message}</span>
-        </div>
-      )}
-
-      {/* iOS SAFARI BREAKOUT INSTRUCTION MODAL */}
-      {showIosSafariModal && (
-        <div id="ios-safari-modal" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
-          <div className="relative w-full max-w-[360px] bg-[#160b11] border border-[#ff4b8b]/30 rounded-3xl p-6 shadow-2xl text-white text-center flex flex-col items-center">
-            
-            {/* Close button */}
-            <button 
-              onClick={() => setShowIosSafariModal(false)}
-              className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors p-1.5 rounded-full hover:bg-white/5 cursor-pointer"
-            >
-              <X size={18} />
-            </button>
-
-            {/* Glowing Icon */}
-            <div className="w-12 h-12 bg-gradient-to-tr from-[#ff4b8b] to-[#7d3cff] rounded-full flex items-center justify-center mb-4 shadow-[0_8px_20px_rgba(255,75,139,0.3)]">
-              <ExternalLink size={20} className="text-white animate-pulse" />
-            </div>
-
-            <h3 className="text-lg font-black tracking-tight mb-2 text-white">
-              {lang === 'PL' ? 'Otwórz w Safari 📲' : 'Open in Safari 📲'}
-            </h3>
-            
-            <p className="text-xs text-white/70 mb-5 leading-relaxed">
-              {lang === 'PL' 
-                ? 'Instagram blokuje zewnętrzne linki. Otwórz tę stronę w normalnej przeglądarce, aby bez problemów pisać i oglądać fotki!' 
-                : 'Instagram limits in-app browser features. Open this page in Safari for full access to content, chats, and photos!'}
-            </p>
-
-            {/* Step-by-step guidance */}
-            <div className="w-full bg-white/5 border border-white/5 rounded-2xl p-4.5 text-left mb-6 text-xs flex flex-col gap-3">
-              <div className="flex items-start gap-2.5">
-                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#ff4b8b] text-white text-[10px] font-black shrink-0 mt-0.5">1</span>
-                <span className="text-white/95 leading-normal">
-                  {lang === 'PL' 
-                    ? 'Kliknij ikonę trzech kropek (⋯) w prawym górnym rogu ekranu.' 
-                    : 'Tap the three dots (⋯) in the top right corner of the screen.'}
-                </span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#7d3cff] text-white text-[10px] font-black shrink-0 mt-0.5">2</span>
-                <span className="text-white/95 leading-normal">
-                  {lang === 'PL' 
-                    ? 'Wybierz opcję "Otwórz w przeglądarce Safari" (lub "Otwórz w systemowej przeglądarce").' 
-                    : 'Select "Open in Safari" or "Open in System Browser".'}
-                </span>
-              </div>
-            </div>
-
-            {/* Force bypass button */}
-            <button 
-              onClick={() => {
-                setShowIosSafariModal(false);
-                window.open(pendingUrl, '_blank', 'noopener,noreferrer');
-              }}
-              className="w-full py-3 px-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-xs font-semibold text-white/80 cursor-pointer"
-            >
-              {lang === 'PL' ? 'Kontynuuj w Instagramie mimo to' : 'Continue inside Instagram anyway'}
-            </button>
-            
-          </div>
         </div>
       )}
 
