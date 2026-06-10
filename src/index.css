@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@layer utilities {
+  /* Keyframe Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 16px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  @keyframes softPulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 4px 20px rgba(125, 60, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    50% {
+      transform: scale(1.025);
+      box-shadow: 0 8px 30px rgba(125, 60, 255, 0.55), 0 0 15px rgba(255, 75, 139, 0.25);
+      border-color: rgba(125, 60, 255, 0.7);
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  /* Utility classes */
+  .animate-fade-in {
+    animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-soft-pulse {
+    animation: softPulse 2.8s infinite ease-in-out;
+  }
+}
+
+/* Custom minimal scrollbar for modals with list of messages */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
