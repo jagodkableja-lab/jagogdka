@@ -34,36 +34,23 @@ export default function App() {
   };
 
   const goToLink = (e: React.MouseEvent<HTMLAnchorElement>, url: string, deepLink?: string) => {
-    e.preventDefault();
-    
     const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
     const isInstagram = /Instagram|FBAN|FBAV/i.test(userAgent);
     const isAndroid = /Android/i.test(userAgent);
 
     // Break out of Instagram in-app browser on Android
     if (isInstagram && isAndroid) {
+      e.preventDefault();
       const rawUrl = url.replace(/^https?:\/\//, '');
       const intentUrl = `intent://${rawUrl}#Intent;scheme=https;end;`;
       window.location.href = intentUrl;
       return;
     }
 
-    // Attempt to open deep link inside native app directly if deep link is supported
-    if (deepLink) {
-      const start = Date.now();
-      window.location.href = deepLink;
-      
-      // Fallback to standard URL if system doesn't handle the deep link within 1 second
-      setTimeout(() => {
-        if (Date.now() - start < 1200) {
-          window.open(url, '_blank', 'noopener,noreferrer');
-        }
-      }, 1000);
-      return;
-    }
-
-    // Default target blank redirection
-    window.open(url, '_blank', 'noopener,noreferrer');
+    // For all other platforms and browsers (iOS, desktop, standard mobile browsers):
+    // Do NOT prevent default! Let the native browser handle the <a> tag's href target="_blank".
+    // This triggers iOS/Android Universal Links (opening Telegram, Instagram, TikTok apps directly if installed)
+    // and naturally opens in a new window/tab without being blocked by browser popup blockers.
   };
 
   return (
@@ -219,6 +206,30 @@ export default function App() {
           </a>
 
         </section>
+
+        {/* Dynamic Help Card: Option if deep redirect links fail inside in-app bio browsers */}
+        <div id="links-help-card" className="w-full mt-5 p-4 rounded-2xl bg-black/25 border border-white/5 text-white/70 text-xs flex items-center gap-3.5 select-none text-left backdrop-blur-md">
+          <div className="w-9 h-9 rounded-xl bg-[#ff4b8b]/10 border border-[#ff4b8b]/20 flex items-center justify-center shrink-0">
+            <Send size={15} className="text-[#ff4b8b]" />
+          </div>
+          <div>
+            <p className="font-bold text-white/90">
+              {lang === 'PL' ? 'Linki nie działają? ✈️' : 'Links not working? ✈️'}
+            </p>
+            <p className="text-[11px] text-white/60 leading-normal mt-0.5 select-text">
+              {lang === 'PL' ? (
+                <>
+                  Wyszukaj bezpośrednio na <span className="text-sky-400 font-bold">Telegramie</span> mój nick:{' '}
+                </>
+              ) : (
+                <>
+                  Search directly on <span className="text-sky-400 font-bold">Telegram</span> for my username:{' '}
+                </>
+              )}
+              <strong className="text-[#ff4b8b] hover:underline cursor-text font-extrabold select-all select-text">@jagodkableja</strong>
+            </p>
+          </div>
+        </div>
 
         {/* Elegant horizontal divider for social links */}
         <div className="w-full flex items-center justify-center gap-4 mt-10 mb-7 opacity-30 select-none">
