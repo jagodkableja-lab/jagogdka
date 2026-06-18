@@ -15,6 +15,7 @@ import {
   Globe, 
   ArrowUpRight
 } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   const [lang, setLang] = useState<'PL' | 'EN'>('PL');
@@ -293,6 +294,7 @@ export default function App() {
         </div>
       )}
 
+      <Analytics />
     </div>
   );
 }
