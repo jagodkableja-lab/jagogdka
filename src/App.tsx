@@ -33,12 +33,13 @@ export default function App() {
     triggerToast(lang === 'PL' ? `Przekierowanie do: ${name}` : `Redirecting to: ${name}`, 'info');
   };
 
-  const goToLink = (e: React.MouseEvent<HTMLAnchorElement>, url: string, deepLink?: string) => {
+  const goToLink = (e: React.MouseEvent<HTMLAnchorElement>, url: string, _deepLink?: string) => {
     const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
     const isInstagram = /Instagram|FBAN|FBAV/i.test(userAgent);
     const isAndroid = /Android/i.test(userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
 
-    // Break out of Instagram in-app browser on Android
+    // 1. Android Instagram / Facebook breakout using Android intents
     if (isInstagram && isAndroid) {
       e.preventDefault();
       const rawUrl = url.replace(/^https?:\/\//, '');
@@ -47,10 +48,18 @@ export default function App() {
       return;
     }
 
-    // For all other platforms and browsers (iOS, desktop, standard mobile browsers):
-    // Do NOT prevent default! Let the native browser handle the <a> tag's href target="_blank".
-    // This triggers iOS/Android Universal Links (opening Telegram, Instagram, TikTok apps directly if installed)
-    // and naturally opens in a new window/tab without being blocked by browser popup blockers.
+    // 2. Restricted In-App/Webview user agents on iOS/Android (Instagram, Facebook, TikTok, Twitter, Google Search App, etc.)
+    // In these locked sandboxes, target="_blank" handles block randomly or trigger popups warning.
+    // Changing location.href in the same tab is 100% reliable and automatically links to native apps (like Telegram/TikTok) if installed!
+    const isWebview = isInstagram || /FBAV|FBAN|Twitter|Tiktok|Line|Kakaotalk|GSA/i.test(userAgent) || (isIOS && !/Safari/i.test(userAgent) && !/CriOS|FxiOS|OPiOS|mercury/i.test(userAgent));
+
+    if (isWebview) {
+      e.preventDefault();
+      window.location.href = url;
+    }
+
+    // 3. For all top-level native web browsers (standard iOS Safari, Chrome "CriOS", Android native Chrome, desktop):
+    // We let the standard <a> tag do 100% of the work without e.preventDefault(). This avoids any popup triggers.
   };
 
   return (
@@ -78,13 +87,6 @@ export default function App() {
         className="absolute top-0 right-0 w-[550px] h-[550px] -mr-48 -mt-24 rounded-full pointer-events-none filter blur-[95px] opacity-45 mix-blend-screen transition-all duration-1000"
         style={{
           background: 'radial-gradient(circle, #4a152e 0%, rgba(0,0,0,0) 70%)'
-        }}
-      />
-      <div 
-        id="bg-decor-2" 
-        className="absolute bottom-0 left-0 w-[550px] h-[550px] -ml-48 -mb-24 rounded-full pointer-events-none filter blur-[95px] opacity-50 mix-blend-screen transition-all duration-1000"
-        style={{
-          background: 'radial-gradient(circle, #1e1b4b 0%, rgba(0,0,0,0) 70%)'
         }}
       />
 
