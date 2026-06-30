@@ -152,10 +152,10 @@ export default function App() {
           {/* 1. Telegram Channel Button (First! Pulsing and highly outstanding) */}
           <a 
             id="btn-telegram-channel"
-            href="https://t.me/jagodka_bleja" 
+            href="https://t.me/+gAeM7ZQ8NFxjNTE0" 
             target="_blank" 
             rel="noopener noreferrer"
-            onClick={(e) => goToLink(e, 'https://t.me/jagodka_bleja', 'tg://resolve?domain=jagodka_bleja')}
+            onClick={(e) => goToLink(e, 'https://t.me/+gAeM7ZQ8NFxjNTE0')}
             className="w-full p-4.5 rounded-[18px] bg-black/30 backdrop-blur-md border border-[#7d3cff]/40 text-white animate-soft-pulse hover:bg-black/45 transition-all duration-300 flex items-center justify-between group cursor-pointer"
           >
             <div className="flex items-center gap-3 pl-3">
