@@ -184,13 +184,13 @@ export default function App() {
             <ArrowUpRight size={16} className="opacity-40 group-hover:opacity-100 transition-opacity pr-3" />
           </a>
 
-          {/* 3. Primary Premium Action (Fanvue - LAST button) - HIDDEN FOR NOW AS REQUESTED, CAN BE RE-ENABLED LATER
+          {/* 3. Primary Premium Action (Fanvue - LAST button) */}
           <a 
             id="btn-fanvue"
-            href="https://www.fanvue.com/jagodkableja" 
+            href="https://www.fanvue.com/jagodkableja/fv-1" 
             target="_blank" 
             rel="noopener noreferrer"
-            onClick={(e) => goToLink(e, 'https://www.fanvue.com/jagodkableja')}
+            onClick={(e) => goToLink(e, 'https://www.fanvue.com/jagodkableja/fv-1')}
             className="w-full p-4.5 rounded-[18px] bg-black/30 backdrop-blur-md border border-[#ff4b8b]/30 text-white font-bold text-base transition-all duration-300 transform hover:-translate-y-1 hover:bg-black/45 hover:shadow-[0_12px_24px_rgba(255,75,139,0.25)] hover:border-[#ff4b8b]/50 flex items-center justify-between group overflow-hidden relative cursor-pointer"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ff4b8b]/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -205,7 +205,6 @@ export default function App() {
               <ArrowUpRight size={16} className="opacity-65 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </div>
           </a>
-          */}
 
         </section>
 
